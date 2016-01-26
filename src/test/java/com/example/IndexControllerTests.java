@@ -6,8 +6,8 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = FalcorApplication.class)
-public class FalcorApplicationTests {
+@SpringApplicationConfiguration(classes = IndexController.class)
+public class IndexControllerTests {
 
 	@Test
 	public void contextLoads() {
