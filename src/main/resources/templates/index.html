@@ -5,7 +5,19 @@
   <title></title>
 </head>
 <body>
-  thymeleaf tmeplate
-  <script src="demo.js"></script>
+  index page
+  <script src="//netflix.github.io/falcor/build/falcor.browser.js"></script>
+  <script>
+    //create model:
+    var model = new falcor.Model({
+      source: new falcor.HttpDataSource('/model.json')
+    });
+    //logging:
+    var log = console.log.bind(console);
+    var jlog = function(x) { console.log(JSON.stringify(x, null, 3)); };
+    var jerror = function(x) { console.error(JSON.stringify(x, null, 3)); };
+
+    model.get('genrelist[0].name').then(jlog, jerror);
+  </script>
 </body>
 </html>

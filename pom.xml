@@ -20,7 +20,7 @@
     </parent>
 
     <properties>
-        <falcor.version>0.30.0</falcor.version>
+        <falcor.version>0.31.0</falcor.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
     </properties>
