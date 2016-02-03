@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @Controller
 public class IndexController {
@@ -18,13 +19,14 @@ public class IndexController {
 	@RequestMapping("/model.json")
 	@ResponseBody
 	String model(HttpServletRequest request, HttpServletResponse response) {
-
-//		FalcorHttpClient falcorHttpClient = FalcorService.createClient(request, response);
-		String result = FalcorService.createClient(request, response);
-		System.out.println(result);
+		String result = null;
+		try {
+			result = FalcorService.createNettyRequest(request, response);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return result;
-
-//		return "{jsonGraph: y}";
+		// return "{jsonGraph: y}";
 	}
 
 }

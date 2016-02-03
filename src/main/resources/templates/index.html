@@ -18,7 +18,7 @@
     var jlog = function(x) { console.log(JSON.stringify(x, null, 3)); };
     var jerror = function(x) { console.error(JSON.stringify(x, null, 3)); };
 
-    model.get('simple').then(jlog, jerror);
+    model.get('todos[0].name').then(jlog, jerror);
   </script>
 </body>
 </html>
