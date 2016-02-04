@@ -53,7 +53,7 @@ public class FalcorService {
         Observable.just("Hello, world!")
                 .map(s -> {
                     System.out.println(s);
-                   return s + " -Dan";
+                    return s + " -Dan";
                 }).subscribe(s -> System.out.println(s));
     }
 
@@ -91,11 +91,6 @@ public class FalcorService {
     }
 
     public static String createNettyRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        /*
-        FalcorPath falcorPath = getPath("simple");
-        ArrayList<FalcorPath> falcorPathArrayList = new ArrayList<>();
-        falcorPathArrayList.add(falcorPath);*/
-
         List<String> paths = new ArrayList<>();
         paths.add(request.getParameter("paths"));
         List<FalcorPath> falcorPathArrayList = getPaths(paths);
@@ -120,13 +115,6 @@ public class FalcorService {
 //        System.out.println(request.getQueryString());
 //        System.out.println(request.getParameter("paths"));
 
-    }
-
-    public static FalcorPath getPath(String s) {
-        StringKey stringKey1 = new StringKey(s);
-        KeySegment[] keySegments = new KeySegment[]{stringKey1};
-        FalcorPath falcorPath = FalcorPath.of(keySegments);
-        return falcorPath;
     }
 
     public static List<FalcorPath> getPaths(List<String> paths) throws IOException {
@@ -154,17 +142,28 @@ public class FalcorService {
 
             @Override
             public Observable<RouteResult> call(RequestContext<HttpServerRequest<ByteBuf>> httpServerRequestRequestContext) {
-//                FalcorPath falcorPath = getPath("simple");
-                List<FalcorPath> falcorPath = null;
-                try {
-                    falcorPath = getPaths(req.getQueryParameters().get("paths"));
-                    FalcorPath matched = falcorPath.get(0);
-                    FalcorPath unmatched = falcorPath.get(0) == null ? null : falcorPath.get(0);
-                    return httpServerRequestRequestContext.complete(matched, unmatched, new Atom("success!"));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return null;
+//                List<FalcorPath> falcorPath = null;
+//                try {
+//                     falcorPath = getPaths(req.getQueryParameters().get("paths"));
+//                     return httpServerRequestRequestContext.complete(FalcorPath.of(falcorPath.get(0).get(0)), falcorPath.get(0), new Atom("success!"));
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                    return null;
+//                }
+
+                FalcorPath matched = httpServerRequestRequestContext.getMatched();
+                FalcorPath unmatched = httpServerRequestRequestContext.getUnmatched();
+                FalcorValue val;
+                if (unmatched.get(1).toString().equals("done")) {
+                    matched = FalcorPath.of(new KeySegment[]{unmatched.get(0), unmatched.get(1)});
+                    unmatched = FalcorPath.of(new KeySegment[]{new StringKey("name")});
+                    val = new Ref(unmatched);
+                } else {
+                    matched = FalcorPath.of(new KeySegment[]{unmatched.get(0), unmatched.get(1)});
+                    val = new Atom("success!");
                 }
+                return httpServerRequestRequestContext.complete(matched, unmatched, val);
+
                 //return httpServerRequestRequestContext.atom("hiill");
             }
         });

@@ -19,6 +19,7 @@
     var jerror = function(x) { console.error(JSON.stringify(x, null, 3)); };
 
     model.get('todos[0].name').then(jlog, jerror);
+    model.get('todos.done.name').then(jlog, jerror);
   </script>
 </body>
 </html>
