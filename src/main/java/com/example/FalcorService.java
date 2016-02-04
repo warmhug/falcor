@@ -1,5 +1,7 @@
 package com.example;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netflix.falcor.model.*;
 import com.netflix.falcor.protocol.http.client.FalcorHttpClient;
@@ -91,27 +93,35 @@ public class FalcorService {
     }
 
     public static String createNettyRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        List<String> paths = new ArrayList<>();
-        paths.add(request.getParameter("paths"));
-        List<FalcorPath> falcorPathArrayList = getPaths(paths);
-
         HttpClient<ByteBuf, ByteBuf> httpClient = HttpClient.newClient(nettyHost, nettyPort);
         FalcorHttpClient falcorHttpClient = new FalcorHttpClient(httpClient);
-        HttpClientRequest<ByteBuf, ByteBuf> clientRequest =
-                falcorHttpClient.get(request.getRequestURI(), falcorPathArrayList);
+        String uri = request.getRequestURI();
 
+        List<String> paths;
         switch (request.getMethod()) {
             case "GET":
-                return getResult(clientRequest);
+                paths = new ArrayList<String>() {{add(request.getParameter("paths"));}};
+                return getResult(falcorHttpClient.get(uri, getPaths(paths)));
             case "POST":
+                String method = request.getParameter("method");
+                if (method.equals("set")) {
+                    JSONObject json = JSON.parseObject(request.getParameter("jsonGraph"));
+                    if (json != null) {
+                        paths = new ArrayList<String>() {{add(json.getString("paths"));}};
+                        return getResult(falcorHttpClient.set(uri, getPaths(paths), json.getString("jsonGraph")));
+                    }
+                } else if (method.equals("call")) {
+                    paths = new ArrayList<String>() {{add("[" + request.getParameter("callPath") + "]");}};
+                    List<Object> args = new ArrayList<Object>() {{add(request.getParameter("arguments"));}};
+                    return getResult(falcorHttpClient.call(uri, getPaths(paths), args));
+                }
+
                 // return createNettyPost(url, "");
             default:
                 return "";
         }
 
-
 //        System.out.println(request.getRequestURL());
-//        System.out.println(request.getRequestURI());
 //        System.out.println(request.getQueryString());
 //        System.out.println(request.getParameter("paths"));
 

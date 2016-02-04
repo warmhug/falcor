@@ -19,7 +19,12 @@
     var jerror = function(x) { console.error(JSON.stringify(x, null, 3)); };
 
     model.get('todos[0].name').then(jlog, jerror);
-    model.get('todos.done.name').then(jlog, jerror);
+//    model.get('todos.done.name').then(jlog, jerror);
+
+    // set 相当于 rest put 请求，幂等
+    model.setValue('todos[0].name', 4).then(jlog, jerror);
+    // call 相当于 rest post 请求
+    model.call('todos[0].tags.push', [{$type: "ref", value: ['todos', 1]}], ["signature"]).then(jlog, jerror);
   </script>
 </body>
 </html>

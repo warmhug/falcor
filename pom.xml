@@ -45,6 +45,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.7</version>
+        </dependency>
+        <dependency>
             <groupId>com.netflix.falcor</groupId>
             <artifactId>falcor-generators</artifactId>
             <version>${falcor.version}</version>
