@@ -3,6 +3,8 @@ package com.example;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.netflix.falcor.model.*;
 import com.netflix.falcor.protocol.http.client.FalcorHttpClient;
 import com.netflix.falcor.protocol.http.server.FalcorRequestHandler;
@@ -36,6 +38,10 @@ public class FalcorService {
     private static String nettyHost = "127.0.0.1";
     private static int nettyPort = 8900;
     private static final ObjectMapper mapper = new ObjectMapper();
+//    private static final Gson gson = new Gson();
+    private static final Gson gson = new GsonBuilder()
+        .enableComplexMapKeySerialization() //支持Map的key为复杂对象的形式
+        .create();
 
     public static void main(String[] args) {
         testRx();
@@ -129,7 +135,9 @@ public class FalcorService {
 
     public static List<FalcorPath> getPaths(List<String> paths) throws IOException {
         if (paths != null) {
-            return Arrays.asList(mapper.readValue(paths.get(0), FalcorPath[].class));
+//            return Arrays.asList(gson.fromJson("[\"todos\",{\"from\":0,\"to\":5},\"name\"]", FalcorPath[].class));
+//             return Arrays.asList(mapper.readValue("[[\"todos\",{\"from\":1,\"to\":5},\"name\"],[\"xx\"]]", FalcorPath[].class));
+             return Arrays.asList(mapper.readValue(paths.get(0), FalcorPath[].class));
         }
         return Collections.emptyList();
     }
