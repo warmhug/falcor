@@ -2,8 +2,9 @@
 
 > 注意：`rxnetty-0.5.0-SNAPSHOT`包mvn里没有，`rxnetty-0.5.0-SNAPSHOT.zip`解压后使用。
 
-1. test/Starter 启动页面server(端口8000)，rxnetty server(端口8900)
+1. test/Starter 启动页面server(端口8000)，rxnetty server(端口8900)。
 2. 访问页面 [http://localhost:8000/](http://localhost:8000/)，打开控制台，看响应结果。
+3. 修改`src/main/resources/templates/index.html`文件里`script`部分，实验不同请求下的不同响应结果。对应Java处理请求方法是`src/main/java/com/example/FalcorService.java`文件里`requestHandler`方法。
 
 ### [falcor](http://netflix.github.io/falcor/) 特点：
 > [why falcor 视频](http://netflix.github.io/falcor/starter/why-falcor.html) (netflix 首席UI架构师)
